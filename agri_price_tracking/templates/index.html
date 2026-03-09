@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Krishi Setu - Live Prices</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <h1>🌾 Live Market Prices</h1>
+
+    <div class="buttons">
+    <button onclick="setCategory('all')">All</button>
+    <button onclick="setCategory('vegetable')">Vegetables</button>
+    <button onclick="setCategory('fruit')">Fruits</button>
+    <button onclick="setCategory('flower')">Flowers</button>
+    <button onclick="setCategory('field_crop')">Field Crops</button>
+</div>
+
+    <input type="text" id="search" placeholder="Search product..." onkeyup="filterProducts()">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Current Price</th>
+                <th>% Change</th>
+                <th>Difference</th>
+                <th>Updated</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

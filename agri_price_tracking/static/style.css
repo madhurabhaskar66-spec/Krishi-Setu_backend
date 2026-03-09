@@ -1,0 +1,43 @@
+body {
+    font-family: Arial;
+    padding: 40px;
+    background-color: #f4f7f9;
+}
+
+h1 {
+    color: green;
+}
+
+button {
+    padding: 8px 15px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+input {
+    padding: 8px;
+    margin: 20px 0;
+    width: 250px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.green {
+    color: green;
+    font-weight: bold;
+}
+
+.red {
+    color: red;
+    font-weight: bold;
+}

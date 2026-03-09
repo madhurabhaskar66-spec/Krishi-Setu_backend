@@ -1,0 +1,3 @@
+from real_price_fetcher import update_prices_from_csv
+
+update_prices_from_csv()
