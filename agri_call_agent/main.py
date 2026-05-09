@@ -32,14 +32,14 @@ def chat(data: Message):
     reply = get_ai_response(data.message)
     return {"reply": reply}
 
-async def generate_audio_stream(text: str, voice: str):
-    communicate = edge_tts.Communicate(text, voice)
+async def generate_audio_stream(text: str, voice: str, rate: str):
+    communicate = edge_tts.Communicate(text, voice, rate=rate)
     async for chunk in communicate.stream():
         if chunk["type"] == "audio":
             yield chunk["data"]
 
 @app.get("/tts")
-async def get_tts(text: str, lang: str = "en-IN"):
+async def get_tts(text: str, lang: str = "en-IN", speed: str = "normal"):
     voices = {
         "en-IN": "en-IN-NeerjaNeural",
         "hi-IN": "hi-IN-SwaraNeural",
@@ -58,4 +58,10 @@ async def get_tts(text: str, lang: str = "en-IN"):
     if lang in voices:
         voice = voices[lang]
         
-    return StreamingResponse(generate_audio_stream(text, voice), media_type="audio/mpeg")
+    rate = "+0%"
+    if speed == "fast":
+        rate = "+20%"
+    elif speed == "slow":
+        rate = "-20%"
+        
+    return StreamingResponse(generate_audio_stream(text, voice, rate), media_type="audio/mpeg")
