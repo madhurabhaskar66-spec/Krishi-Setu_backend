@@ -67,7 +67,57 @@ def verify_otp(data: VerifyOTP):
 
 @app.get("/products")
 def get_products(db: Session = Depends(get_db)):
-    return db.query(models.Product).all()
+    products = db.query(models.Product).all()
+    result = []
+    for p in products:
+        farmer = db.query(models.User).filter(models.User.id == p.farmer_id).first()
+        result.append({
+            "id": p.id,
+            "farmer_id": p.farmer_id,
+            "farmer_name": farmer.name if farmer else "Unknown Farmer",
+            "farmer_location": farmer.field_location if farmer else "",
+            "name": p.name,
+            "price_per_kg": float(p.price_per_kg) if p.price_per_kg else 0,
+            "available_quantity": float(p.available_quantity) if p.available_quantity else 0,
+        })
+    return result
+
+
+class ProductCreate(BaseModel):
+    farmer_id: int
+    name: str
+    price_per_kg: float
+    available_quantity: float
+    category: str = "general"
+
+@app.post("/add-product")
+def add_product(data: ProductCreate, db: Session = Depends(get_db)):
+    farmer = db.query(models.User).filter(models.User.id == data.farmer_id).first()
+    if not farmer:
+        raise HTTPException(status_code=404, detail="Farmer not found")
+    new_product = models.Product(
+        farmer_id=data.farmer_id,
+        name=data.name,
+        price_per_kg=data.price_per_kg,
+        available_quantity=data.available_quantity,
+    )
+    db.add(new_product)
+    db.commit()
+    db.refresh(new_product)
+    return {"message": "Product listed successfully", "product_id": new_product.id}
+
+@app.delete("/delete-product/{product_id}")
+def delete_product(product_id: int, farmer_id: int, db: Session = Depends(get_db)):
+    product = db.query(models.Product).filter(
+        models.Product.id == product_id,
+        models.Product.farmer_id == farmer_id
+    ).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found or not authorized")
+    db.delete(product)
+    db.commit()
+    return {"message": "Product removed from marketplace"}
+
 
 
 # ------------------ PLACE ORDER ------------------

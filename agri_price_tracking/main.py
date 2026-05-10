@@ -113,5 +113,5 @@ def get_summary():
 
 @app.on_event("startup")
 def load_data_on_startup():
-    from real_price_fetcher import update_prices_from_csv
-    update_prices_from_csv()
+    from real_price_fetcher import update_prices_from_api
+    update_prices_from_api()
